@@ -1,23 +1,31 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    name: 'App',
+    methods: {
+      chooseRouter()
+      {
+        let userCookie = this.$cookie.get('userCookie')
+        if (userCookie)
+        {
+          console.log(userCookie)
+          this.$router.push("/")
+        }
+        else
+        {
+          this.$router.push("/login")
+        }
+      }
+    },
+    mounted: function ()
+    {
+      this.chooseRouter()
+    }
+  }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
