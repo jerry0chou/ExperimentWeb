@@ -1,11 +1,12 @@
 <template>
   <el-row>
+
     <el-col :span="8" :offset="7">
+      <hr>
       <el-form status-icon ref="ruleForm2" label-width="100px" class="demo-ruleForm">
         <el-form-item align="center">
-          <h2>电池实验数据管理系统</h2>
+          <h4>电池实验数据管理系统</h4>
         </el-form-item>
-
         <el-form-item prop="account">
           <el-input v-model="account">
             <template slot="prepend">账号</template>
@@ -27,6 +28,7 @@
 </template>
 <script>
   import http from '@/api/http'
+
   export default {
     name: 'Login',
     data()
@@ -39,20 +41,21 @@
     methods: {
       async login()
       {
-          let data={
-            account:"jerry",
-            password:"123"
-          }
-        const res =await http.post('/login', data)
-        if (res.data==="sucess")
+        let data = {
+          account: this.account,
+          password: this.password
+        }
+        const res = await http.post('/login', data)
+        if (res.data === "success")
         {
-         // alert('请求成功'+res.data)
-          console.log(res);
+          // alert('请求成功'+res.data)
+          //console.log(res);
           this.$message.success("登陆成功")
           this.$cookie.set('userCookie', data.account, 1);
           this.$router.push("/")
         }
-        else {
+        else
+        {
           this.$message.info("账号密码错误")
         }
       },
@@ -73,8 +76,8 @@
       },
       resetForm()
       {
-        this.account=""
-        this.password=""
+        this.account = ""
+        this.password = ""
       }
 
     }
