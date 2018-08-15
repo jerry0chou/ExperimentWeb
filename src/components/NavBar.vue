@@ -1,9 +1,8 @@
 <template>
   <div>
-    <b-container>
-      <b-row>
-
-        <b-col cols="10" offset="1">
+    <!--<b-container>-->
+      <b-row >
+        <b-col :cols="cols" :offset="offset">
           <!--<hr>-->
           <b-nav>
             <!--<b-nav-item v-if="rid">系统管理</b-nav-item>-->
@@ -42,19 +41,21 @@
             </b-nav-item-dropdown>
 
 
-            &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <b-nav-item>
               <b-dropdown right split variant="outline-success" :text="username" size="sm" align="right">
                 <b-dropdown-item>主页</b-dropdown-item>
                 <b-dropdown-item @click="loginOut">注销</b-dropdown-item>
               </b-dropdown>
             </b-nav-item>
+            <p style="margin-top:12px;"><b-badge variant="success">{{roleName}}</b-badge></p>
           </b-nav>
 
         </b-col>
-
       </b-row>
-    </b-container>
+    <div  style="margin-top: 20px">
+    </div>
+    <!--</b-container>-->
 
   </div>
 </template>
@@ -71,7 +72,10 @@
     {
       return {
         username: "",
-        rid: false
+        rid: false,
+        cols:8,
+        offset:2,
+        roleName:"实验员"
       }
     },
     methods: {
@@ -84,9 +88,12 @@
         if (res.data)
         {
           this.username = res.data.username
+          this.roleName=res.data.roleName
           if (res.data.rid === 1)
           {
             this.rid = true //表示超级管理员
+            this.cols=11
+            this.offset=1
           }
         }
       },
@@ -99,6 +106,7 @@
     },
     mounted: function ()
     {
+      console.log(this.$cookie.get('userCookie'))
       if (this.$cookie.get('userCookie'))
       {
         this.getUser()
