@@ -1,9 +1,9 @@
 <template>
-  <el-row>
-
-    <el-col :span="8" :offset="7">
-      <hr>
-      <el-form status-icon ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+  <el-row >
+    <br><br><br><br>
+    <el-col :span="8" :offset="8" >
+       <el-card class="box-card">
+      <el-form status-icon ref="ruleForm2"  class="demo-ruleForm">
         <el-form-item align="center">
           <h4>电池实验数据管理系统</h4>
         </el-form-item>
@@ -23,6 +23,7 @@
           <el-button type="warning" round @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
+       </el-card>
     </el-col>
   </el-row>
 </template>

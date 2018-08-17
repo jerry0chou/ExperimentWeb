@@ -27,6 +27,7 @@
         <el-table
           ref="multipleTable"
           :data="users"
+          stripe
           tooltip-effect="dark"
           style="width: 100%"
           @selection-change="handleSelectionChange"
@@ -172,7 +173,7 @@
       {
         if (this.queryname === '')
         {
-          paginationVisible = true
+          this.paginationVisible = true
           this.getAllUser(this.cur_page, this.per_page)
         }
 
