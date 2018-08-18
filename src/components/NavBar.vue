@@ -1,82 +1,83 @@
 <template>
   <div>
-    <!--<b-container>-->
-      <b-row >
-        <b-col :cols="cols" :offset="offset">
-          <!--<hr>-->
-          <b-nav>
-            <!--<b-nav-item v-if="rid">系统管理</b-nav-item>-->
-            <b-nav-item-dropdown v-if="rid" id="nav7_ddown" text="系统管理" extra-toggle-classes="nav-link-custom" right>
-              <b-dropdown-item>
-                <b-link to="User">用户管理</b-link>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <b-link to="Role">角色管理</b-link>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <b-link to="DataOp">数据备份与恢复</b-link>
-              </b-dropdown-item>
-            </b-nav-item-dropdown>
+      <el-col :span="span" :offset="offset">
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
+                 text-color="#409EFF">
+          <el-submenu index="1" v-if="rid">
+            <template slot="title">系统管理</template>
+            <el-menu-item index="1-1">
+              <router-link to="/user">用户管理</router-link>
+            </el-menu-item>
+            <el-menu-item index="1-2">
+              <router-link to="/role">角色管理</router-link>
+            </el-menu-item>
+            <el-menu-item index="1-3">
+              <router-link to="/dataOp">数据备份与恢复</router-link>
+            </el-menu-item>
+          </el-submenu>
 
+          <el-menu-item index="2">
+            实验管理
+          </el-menu-item>
 
-            <b-nav-item>实验管理</b-nav-item>
+          <el-menu-item index="3">
+            实验数据管理
+          </el-menu-item>
 
-            <b-nav-item>实验数据管理</b-nav-item>
+          <el-submenu index="4">
+            <template slot="title">实验资源管理</template>
+            <el-menu-item index="4-1">
+              <router-link to="/device">仪器管理</router-link>
+            </el-menu-item>
+            <el-menu-item index="4-2">
+              <router-link to="/laboratory">材料管理</router-link>
+            </el-menu-item>
+            <el-menu-item index="4-3">
+              <router-link to="/material">实验室管理</router-link>
+            </el-menu-item>
+          </el-submenu>
 
-            <b-nav-item-dropdown id="nav7_ddown" text="实验资源管理" extra-toggle-classes="nav-link-custom" right>
-              <b-dropdown-item>
-                <b-link to="Device">设备管理</b-link>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <b-link to="Material">材料管理</b-link>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <b-link to="Laboratory">实验室管理</b-link>
-              </b-dropdown-item>
-            </b-nav-item-dropdown>
+          <el-submenu index="5">
+            <template slot="title">报表管理</template>
+            <el-menu-item index="5-1">试验次数分析</el-menu-item>
+            <el-menu-item index="5-2">实验数据分析</el-menu-item>
+          </el-submenu>
 
-            <b-nav-item-dropdown id="nav7_ddown" text="报表管理" extra-toggle-classes="nav-link-custom" right>
-              <b-dropdown-item>实验次数分析</b-dropdown-item>
-              <b-dropdown-item>实验数据分析</b-dropdown-item>
-            </b-nav-item-dropdown>
-
-
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <b-nav-item>
-              <b-dropdown right split variant="outline-success" :text="username" size="sm" align="right">
-                <b-dropdown-item>主页</b-dropdown-item>
-                <b-dropdown-item @click="loginOut">注销</b-dropdown-item>
-              </b-dropdown>
-            </b-nav-item>
-            <p style="margin-top:12px;"><b-badge variant="success">{{roleName}}</b-badge></p>
-          </b-nav>
-
-        </b-col>
-      </b-row>
-    <div  style="margin-top: 20px">
-    </div>
-    <!--</b-container>-->
-
+          <el-menu-item index="6">
+            <el-tag type="success">{{roleName}}</el-tag>
+          </el-menu-item>
+          <el-menu-item index="7">
+            <el-dropdown :hide-on-click="false">
+            <span class="el-dropdown-link">
+              {{username}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>主页</el-dropdown-item>
+                <el-dropdown-item @click.native="loginOut">注销</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+    <br>
   </div>
 </template>
 
 <script>
-  import TabNav from "element-ui/packages/tabs/src/tab-nav";
   import http from '@/api/http'
 
   export default {
-
     name: "NavBar",
-    components: {TabNav},
     data()
     {
       return {
+        activeIndex: '7',
         username: "",
         rid: false,
-        cols:8,
-        offset:2,
-        roleName:"实验员"
-      }
+        span: 12,
+        offset: 6,
+        roleName: "实验员"
+      };
     },
     methods: {
       async getUser()
@@ -88,12 +89,12 @@
         if (res.data)
         {
           this.username = res.data.username
-          this.roleName=res.data.roleName
+          this.roleName = res.data.roleName
           if (res.data.rid === 1)
           {
             this.rid = true //表示超级管理员
-            this.cols=11
-            this.offset=1
+            this.span = 15
+            this.offset = 5
           }
         }
       },
@@ -106,16 +107,23 @@
     },
     mounted: function ()
     {
-      console.log(this.$cookie.get('userCookie'))
       if (this.$cookie.get('userCookie'))
       {
         this.getUser()
       }
 
     }
+
   }
 </script>
 
 <style scoped>
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
 
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 </style>

@@ -13,7 +13,6 @@
         let userCookie = this.$cookie.get('userCookie')
         if (userCookie)
         {
-          console.log(userCookie)
           this.$router.push("/")
         }
         else

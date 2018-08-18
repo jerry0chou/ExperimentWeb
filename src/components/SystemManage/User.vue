@@ -95,7 +95,7 @@
         </div>
       </el-card>
     </el-col>
-    <el-dialog :title="dialogname" :visible.sync="DialogFormVisible">
+    <el-dialog :title="dialogname" :visible.sync="DialogFormVisible" @close='cancelDiaglog'>
       <el-form :model="form">
         <el-form-item label="账户" :label-width="formLabelWidth">
           <el-input v-model="form.account" auto-complete="off" :disabled="accountDisable"></el-input>
@@ -140,7 +140,7 @@
     data()
     {
       return {
-        DialogFormVisible: false,
+
         form: {
           uid: null,
           rid: null,
@@ -161,6 +161,7 @@
         roleList: [],
 
         // 弹窗属性
+        DialogFormVisible: false,
         dialogname: "用户编辑",
         accountDisable: true,
         placeholderVal: "不输入，则密码不变",
