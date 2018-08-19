@@ -30,10 +30,10 @@
               <router-link to="/device">仪器管理</router-link>
             </el-menu-item>
             <el-menu-item index="4-2">
-              <router-link to="/laboratory">材料管理</router-link>
+              <router-link to="/material">材料管理</router-link>
             </el-menu-item>
             <el-menu-item index="4-3">
-              <router-link to="/material">实验室管理</router-link>
+              <router-link to="/laboratory">实验室管理</router-link>
             </el-menu-item>
           </el-submenu>
 

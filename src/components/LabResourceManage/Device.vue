@@ -1,10 +1,8 @@
 <template>
   <div>
     <NavBar></NavBar>
-    <br>
     <el-col :span="18" :offset="3">
       <el-card class="box-card">
-
         <el-form :inline="true">
           <el-form-item>
             <el-input style="width: 450px" placeholder="请输入内容" v-model="content" class="input-with-select">
@@ -85,7 +83,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="cur_page"
-            :page-sizes="[5, 10, 15, 20]"
+            :page-sizes="[5, 10, 15, 20,50]"
             :page-size="5"
             layout="total,sizes, prev, pager, next"
             :total="count">
@@ -114,7 +112,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelDiaglog">取 消</el-button>
-        <el-button type="primary" @click="summitApplianceForm">确 定</el-button>
+        <el-button type="primary" @click="submitApplianceForm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -134,21 +132,15 @@
         content: '',
         selectType: 'name',
         multipleSelection: [],
+        queryEnabled: false,
 
-        appliances: [{
-          aid: '1',
-          name: '真空干燥箱',
-          category: 'DZF-0204',
-          manufacturer: "上海通讯事业邮箱责任公司",
-          note: "我是备注"
-        }],
+        appliances: [],
         // 上方栏
 
 
         // 弹窗属性
         dialogname: "仪器编辑",
         aidVisible: true,
-        paginationVisible: true,
         DialogFormVisible: false,
         formLabelWidth: '120px',
 
@@ -161,6 +153,7 @@
         },
 
         // 分页
+        paginationVisible: true,
         count: 0,
         per_page: 5,
         cur_page: 1,
@@ -183,7 +176,7 @@
           appliance: JSON.stringify(this.form)
         }
         const res = await
-          http.post('/summitApplianceEditForm', params)
+          http.post('/submitApplianceEditForm', params)
         if (res.data === "success")
         {
           this.getAppliances(this.cur_page, this.per_page)
@@ -197,7 +190,7 @@
           appliance: JSON.stringify(this.form)
         }
         const res = await
-          http.post('/summitApplianceAddForm', params)
+          http.post('/submitApplianceAddForm', params)
         if (res.data === "success")
         {
           this.getAppliances(this.cur_page, this.per_page)
@@ -205,7 +198,7 @@
           this.DialogFormVisible = false
         }
       },
-      summitApplianceForm()
+      submitApplianceForm()
       {
         if (this.dialogname === "新增仪器")
         {
@@ -216,25 +209,31 @@
           this.postApplianceEditForm()
         }
       },
-      async queryContent(page=1,per_page)
+      async postqueryContent(page, per_page)
       {
-        if(!page){page=1;}
-        alert("page "+page+ " per_page "+per_page)
-        console.log("page:"+page,"per_page "+per_page)
         let params = {
-          selectType:this.selectType,
-          content:this.content,
-          page:page,
-          per_page:per_page || 5
+          selectType: this.selectType,
+          content: this.content,
+          page: page,
+          per_page: per_page
         }
         const res = await
           http.post('/appllianceQueryContent', params)
-        if (res.data === "success")
+        this.appliances = res.data.appliances
+        this.count = res.data.count
+      },
+      queryContent()
+      {
+        if (this.content === '')
         {
-          alert("成功得到数据")
-          // this.getAppliances(this.cur_page, this.per_page)
-          // this.$message.success("新增仪器成功")
-          // this.DialogFormVisible = false
+          this.queryEnabled = false
+          this.page = 1
+          this.getAppliances(1, this.per_page)
+        }
+        else
+        {
+          this.queryEnabled = true
+          this.postqueryContent(1, this.per_page)
         }
       },
       addAppliance()
@@ -308,12 +307,18 @@
       handleSizeChange(val)
       {
         this.per_page = val
-        this.getAppliances(this.cur_page, val)
+        if (this.queryEnabled == false)
+          this.getAppliances(this.cur_page, val)
+        else
+          this.postqueryContent(this.cur_page, val)
       },
       handleCurrentChange(val)
       {
         this.cur_page = val
-        this.getAppliances(val, this.per_page)
+        if (this.queryEnabled == false)
+          this.getAppliances(val, this.per_page)
+        else
+          this.postqueryContent(val, this.per_page)
       },
       async getAppliances(page, per_page)
       {
