@@ -132,9 +132,7 @@
         multipleSelection: [],
         queryEnabled: false,
 
-        materials: [
-          {mid: 1, name: "12", purity: "123", manufacturer: "2323", note: "4"},
-        ],
+        materials: [],
 
         // 弹窗属性
         dialogname: "材料编辑",

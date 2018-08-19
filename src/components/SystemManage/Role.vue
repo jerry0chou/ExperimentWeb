@@ -135,7 +135,7 @@
             this.$message.success("角色添加成功")
             this.getAllRole()
           }
-          this.$message.error(res.data)
+          else{this.$message.error(res.data)}
         }
       }
     }
