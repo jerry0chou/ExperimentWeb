@@ -72,9 +72,7 @@
     {
       return {
         inputLabName: "",
-        labs: [
-          {lid: 1, name: "2323", note: "df"}
-        ],
+        labs: [],
         dialogFormVisible: false,
         //编辑
         editLabName: "",

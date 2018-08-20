@@ -8,6 +8,8 @@ import DataOp from '@/components/SystemManage/DataOp.vue'
 import Device from '@/components/LabResourceManage/Device.vue'
 import Laboratory from '@/components/LabResourceManage/Laboratory.vue'
 import Material from '@/components/LabResourceManage/Material.vue'
+import Experiment from "@/components/ExpManage/Experiment.vue"
+import ExpData from "@/components/ExpDataManage/ExpData.vue"
 
 Vue.use(Router)
 
@@ -52,6 +54,16 @@ export default new Router({
       path: '/material',
       name: 'Material',
       component: Material
+    },
+    {
+      path: '/experiment',
+      name: 'Experiment',
+      component: Experiment
+    },
+    {
+      path: '/expdata',
+      name: 'ExpData',
+      component: ExpData
     }
   ]
 })

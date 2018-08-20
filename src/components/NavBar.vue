@@ -17,11 +17,11 @@
           </el-submenu>
 
           <el-menu-item index="2">
-            实验管理
+            <router-link to="/experiment"> 实验管理</router-link>
           </el-menu-item>
 
           <el-menu-item index="3">
-            实验数据管理
+            <router-link to="/expdata">实验数据管理</router-link>
           </el-menu-item>
 
           <el-submenu index="4">
@@ -59,7 +59,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-    <br>
+      <br><br><br>
   </div>
 </template>
 

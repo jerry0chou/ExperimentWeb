@@ -1,28 +1,24 @@
 <template>
   <div>
     <NavBar></NavBar>
-
-    <el-col :span="12" :offset="6">
+    <el-col :span="14" :offset="5">
       <el-card class="box-card">
-          <el-form :inline="true">
-            <el-form-item>
-              <el-input v-model="queryname" placeholder="输入账号"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="queryUser">查询</el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="registerUser">注册用户</el-button>
-            </el-form-item>
-            <el-form-item>
-              <div>
-                <el-button type="danger" @click="batchDelete">批量删除</el-button>
-              </div>
-            </el-form-item>
-          </el-form>
-        <!--</div>-->
-        <!--</el-col>-->
-        <!--<el-col :span="12" :offset="6">-->
+        <el-form :inline="true">
+          <el-form-item>
+            <el-input v-model="queryname" placeholder="输入账号"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="queryUser">查询</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="registerUser">注册用户</el-button>
+          </el-form-item>
+          <el-form-item>
+            <div>
+              <el-button type="danger" @click="batchDelete">批量删除</el-button>
+            </div>
+          </el-form-item>
+        </el-form>
 
         <el-table
           ref="multipleTable"
