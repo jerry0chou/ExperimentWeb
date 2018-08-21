@@ -7,10 +7,10 @@
           <el-form-item>
             <el-input style="width: 420px" placeholder="请输入内容" v-model="content" class="input-with-select">
               <el-select v-model="selectType" style="width: 120px" slot="append" placeholder="请选择">
+                <el-option label="实验编号" value="eid"></el-option>
                 <el-option label="实验名称" value="expname"></el-option>
                 <el-option label="实验时间" value="date"></el-option>
                 <el-option label="用户账号" value="account"></el-option>
-
               </el-select>
             </el-input>
           </el-form-item>
@@ -177,7 +177,7 @@
       return {
         // 搜索
         content: '',
-        selectType: 'expname',
+        selectType: 'eid',
         multipleSelection: [],
         queryEnabled: false,
 
@@ -292,7 +292,6 @@
       },
       addExperiment()
       {
-
         this.form.eid = ''
         this.form.expname = ''
         this.form.labname = ''
@@ -308,7 +307,6 @@
       {
         let eidList = []
         this.multipleSelection.forEach(experiment => eidList.push(experiment.eid))
-        console.log(eidList)
         let params = {
           eidList: JSON.stringify(eidList)
         }
@@ -322,14 +320,20 @@
           if (res.data === "success")
           {
             this.$message.success("批量删除成功")
-            this.getExperiments(this.cur_page, this.per_page)
+            if (this.count % this.per_page == 1)
+            {
+              this.getExperiments(this.cur_page - 1, this.per_page)
+            }
+            else
+            {
+              this.getExperiments(this.cur_page, this.per_page)
+            }
           }
         }
       },
       handleSelectionChange(val)
       {
         this.multipleSelection = val;
-        //console.log(this.multipleSelection)
       },
       handleEdit(index, row)
       {
@@ -348,7 +352,15 @@
             message: '删除成功',
             type: 'success'
           });
-          this.getExperiments(this.cur_page, this.per_page)
+
+          if (this.count % this.per_page == 1)
+          {
+            this.getExperiments(this.cur_page - 1, this.per_page)
+          }
+          else
+          {
+            this.getExperiments(this.cur_page, this.per_page)
+          }
         }
       },
       handleDelete(index, row)
@@ -386,11 +398,9 @@
         if (res.data != "error")
         {
           this.experiments = res.data.experiments
-          console.log(this.experiments)
           this.count = res.data.count
           this.labs = res.data.labs
           this.users = res.data.users
-          console.log(this.labs)
         }
       },
     },

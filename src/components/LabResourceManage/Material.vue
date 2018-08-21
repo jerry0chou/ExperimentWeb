@@ -246,7 +246,6 @@
       {
         let midList = []
         this.multipleSelection.forEach(material => midList.push(material.mid))
-        console.log(midList)
         let params = {
           midList: JSON.stringify(midList)
         }
@@ -260,14 +259,20 @@
           if (res.data === "success")
           {
             this.$message.success("批量删除成功")
-            this.getMaterials(this.cur_page, this.per_page)
+            if (this.count % this.per_page == 1)
+            {
+              this.getMaterials(this.cur_page - 1, this.per_page)
+            }
+            else
+            {
+              this.getMaterials(this.cur_page, this.per_page)
+            }
           }
         }
       },
       handleSelectionChange(val)
       {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
       },
       handleEdit(index, row)
       {
@@ -286,7 +291,14 @@
             message: '删除成功',
             type: 'success'
           });
-          this.getMaterials(this.cur_page, this.per_page)
+          if (this.count % this.per_page == 1)
+          {
+            this.getMaterials(this.cur_page - 1, this.per_page)
+          }
+          else
+          {
+            this.getMaterials(this.cur_page, this.per_page)
+          }
         }
       },
       handleDelete(index, row)
@@ -304,7 +316,7 @@
         if (this.queryEnabled == false)
           this.getMaterials(this.cur_page, val)
         else
-        this.postqueryContent(this.cur_page, val)
+          this.postqueryContent(this.cur_page, val)
       },
       handleCurrentChange(val)
       {

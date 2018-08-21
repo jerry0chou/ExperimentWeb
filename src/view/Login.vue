@@ -50,7 +50,6 @@
         if (res.data === "success")
         {
           // alert('请求成功'+res.data)
-          //console.log(res);
           this.$message.success("登陆成功")
           this.$cookie.set('userCookie', data.account, 1);
           this.$router.push("/")

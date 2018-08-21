@@ -251,7 +251,6 @@
       {
         let aidList = []
         this.multipleSelection.forEach(appliance => aidList.push(appliance.aid))
-        console.log(aidList)
         let params = {
           aidList: JSON.stringify(aidList)
         }
@@ -265,14 +264,20 @@
           if (res.data === "success")
           {
             this.$message.success("批量删除成功")
-            this.getAppliances(this.cur_page, this.per_page)
+            if (this.count % this.per_page == 1)
+            {
+              this.getAppliances(this.cur_page - 1, this.per_page)
+            }
+            else
+            {
+              this.getAppliances(this.cur_page, this.per_page)
+            }
           }
         }
       },
       handleSelectionChange(val)
       {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
       },
       handleEdit(index, row)
       {
@@ -292,7 +297,15 @@
             message: '删除成功',
             type: 'success'
           });
-          this.getAppliances(this.cur_page, this.per_page)
+
+          if (this.count % this.per_page == 1)
+          {
+            this.getAppliances(this.cur_page - 1, this.per_page)
+          }
+          else
+          {
+            this.getAppliances(this.cur_page, this.per_page)
+          }
         }
       },
       handleDelete(index, row)

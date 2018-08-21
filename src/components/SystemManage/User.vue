@@ -183,7 +183,6 @@
           if (res.data !== "failure")
           {
             //alert("success")
-            console.log("queryUser", res.data)
             this.users = res.data
             this.paginationVisible = false
             // this.getAllUser(this.cur_page, this.per_page)
@@ -281,7 +280,6 @@
       },
       handleCurrentChange(val)
       {
-        //console.log(`当前页: ${val}`);
         this.cur_page = val
         this.getAllUser(val, this.per_page)
       },
@@ -289,11 +287,9 @@
       {
         let accountLists = []
         this.multipleSelection.forEach(user => accountLists.push(user.account))
-        console.log(accountLists)
         let params = {
           accountList: JSON.stringify(accountLists)
         }
-        console.log("params:", params)
         const res = await http.post('/batchDelete', params)
         if (res.data === "success")
         {
@@ -305,7 +301,6 @@
       handleSelectionChange(val)
       {
         this.multipleSelection = val;
-
       },
       async getAllUser(page, per_page)
       {
@@ -319,7 +314,6 @@
           this.users = res.data.users
           this.count = res.data.count
           this.roleList = res.data.roleList
-          console.log(res.data)
         }
       },
       async removeUser(account)
@@ -335,7 +329,14 @@
             message: '删除成功',
             type: 'success'
           });
-          this.getAllUser(this.cur_page, this.per_page)
+          if(this.count%this.per_page==1)
+          {
+             this.getAllUser(this.cur_page-1, this.per_page)
+          }
+          else
+          {
+             this.getAllUser(this.cur_page, this.per_page)
+          }
         }
       },
       handleDelete: function (index, row)
@@ -355,8 +356,6 @@
         this.form.username = row.username
         this.form.phone = row.phone
         this.form.roleName = row.roleName
-        console.log("password=", row.password)
-        console.log("row=", row)
 
         this.DialogFormVisible = true
       },
