@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Lab from '@/view/Lab'
+import Home from '@/view/Home'
 import Login from '@/view/Login'
 import User from "@/components/SystemManage/User.vue"
 import Role from '@/components/SystemManage/Role.vue'
@@ -17,8 +17,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Lab',
-      component: Lab
+      name: 'Home',
+      component: Home
     },
     {
       path: '/login',

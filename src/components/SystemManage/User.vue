@@ -283,7 +283,7 @@
         this.cur_page = val
         this.getAllUser(val, this.per_page)
       },
-      async batchDelete()
+      async postBatchDelete()
       {
         let accountLists = []
         this.multipleSelection.forEach(user => accountLists.push(user.account))
@@ -297,6 +297,15 @@
           this.getAllUser(this.cur_page, this.per_page)
         }
 
+      },
+      batchDelete()
+      {
+        this.$confirm('注意:如果用户做了实验，是不能删除的?', '提示', {
+          type: 'warning'
+        }).then(() =>
+        {
+          this.postBatchDelete()
+        })
       },
       handleSelectionChange(val)
       {
@@ -337,6 +346,10 @@
           {
              this.getAllUser(this.cur_page, this.per_page)
           }
+        }
+        else
+        {
+          this.$message.error(res.data)
         }
       },
       handleDelete: function (index, row)

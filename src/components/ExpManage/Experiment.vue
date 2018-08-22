@@ -9,11 +9,20 @@
               <el-select v-model="selectType" style="width: 120px" slot="append" placeholder="请选择">
                 <el-option label="实验编号" value="eid"></el-option>
                 <el-option label="实验名称" value="expname"></el-option>
-                <el-option label="实验时间" value="date"></el-option>
                 <el-option label="用户账号" value="account"></el-option>
               </el-select>
             </el-input>
           </el-form-item>
+
+          <el-form-item>
+            <el-select v-model="statusType" placeholder="选择状态" style="width: 105px">
+              <el-option label="全部" value='-1'></el-option>
+              <el-option label="未进行" value='0'></el-option>
+              <el-option label="正在进行" value='1'></el-option>
+              <el-option label="已完成" value='2'></el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="queryContent">查询</el-button>
           </el-form-item>
@@ -25,7 +34,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="warning" icon="el-icon-download" circle></el-button>
+            <el-button type="warning" icon="el-icon-download" circle @click="downloadDialogVisible=true"></el-button>
           </el-form-item>
         </el-form>
 
@@ -162,6 +171,24 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="请选择要下载的实验状态" :visible.sync="downloadDialogVisible" center width="30%" >
+      <el-form>
+        <el-form-item label="" label-width="75px">
+          <el-select v-model="downloadExpStatus" >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option label="未进行" value="0"></el-option>
+            <el-option label="正在进行" value="1"></el-option>
+            <el-option label="已完成" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="downloadDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="startDownload">开始下载</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -180,6 +207,7 @@
         selectType: 'eid',
         multipleSelection: [],
         queryEnabled: false,
+        statusType: '-1',
 
         experiments: [],
         labs: [],
@@ -196,6 +224,11 @@
         DialogFormVisible: false,
         formLabelWidth: '120px',
 
+        // 下载
+        downloadDialogVisible: false,
+        downloadExpStatus:'-1',
+
+
         form: {
           eid: '',
           expname: "",
@@ -207,6 +240,15 @@
       }
     },
     methods: {
+      async startDownload()
+      {
+        let params = {
+          downloadExpStatus: this.downloadExpStatus,
+        }
+        const res = await
+          http.post('/downExperiment', params)
+       alert(res.data)
+      },
       changeDate(timestamp)
       {
         var date = new Date(timestamp);
@@ -286,9 +328,33 @@
           this.postExperimentEditForm()
         }
       },
+      async postqueryContent(page, per_page)
+      {
+        let params = {
+          selectType: this.selectType,
+          statusType: this.statusType,
+          content: this.content,
+          page: page,
+          per_page: per_page
+        }
+        const res = await
+          http.post('/experimentQueryContent', params)
+        this.experiments = res.data.experiments
+        this.count = res.data.count
+      },
       queryContent()
       {
-
+        if (this.content === '' && this.statusType == '-1')
+        {
+          this.queryEnabled = false
+          this.page = 1
+          this.getExperiments(1, this.per_page)
+        }
+        else
+        {
+          this.queryEnabled = true
+          this.postqueryContent(1, this.per_page)
+        }
       },
       addExperiment()
       {
@@ -303,7 +369,7 @@
         this.dialogname = "新增实验"
         this.DialogFormVisible = true
       },
-      async batchDelete()
+      async postBatchDelete()
       {
         let eidList = []
         this.multipleSelection.forEach(experiment => eidList.push(experiment.eid))
@@ -331,6 +397,16 @@
           }
         }
       },
+      batchDelete()
+      {
+        this.$confirm('注意:如果实验产生了数据,是不能删除该实验!!!', '提示', {
+          type: 'warning'
+        }).then(() =>
+        {
+          this.postBatchDelete()
+        })
+      },
+
       handleSelectionChange(val)
       {
         this.multipleSelection = val;
@@ -362,6 +438,10 @@
             this.getExperiments(this.cur_page, this.per_page)
           }
         }
+        else
+        {
+          this.$message.error(res.data)
+        }
       },
       handleDelete(index, row)
       {
@@ -375,18 +455,18 @@
       handleSizeChange(val)
       {
         this.per_page = val
-        // if (this.queryEnabled == false)
-        this.getExperiments(this.cur_page, val)
-        // else
-        // this.postqueryContent(this.cur_page, val)
+        if (this.queryEnabled == false)
+          this.getExperiments(this.cur_page, val)
+        else
+          this.postqueryContent(this.cur_page, val)
       },
       handleCurrentChange(val)
       {
         this.cur_page = val
-        // if (this.queryEnabled == false)
-        this.getExperiments(val, this.per_page)
-        // else
-        //   this.postqueryContent(val, this.per_page)
+        if (this.queryEnabled == false)
+          this.getExperiments(val, this.per_page)
+        else
+          this.postqueryContent(val, this.per_page)
       },
       async getExperiments(page, per_page)
       {
@@ -398,6 +478,7 @@
         if (res.data != "error")
         {
           this.experiments = res.data.experiments
+          console.log(this.experiments)
           this.count = res.data.count
           this.labs = res.data.labs
           this.users = res.data.users

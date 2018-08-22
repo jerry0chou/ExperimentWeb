@@ -19,8 +19,8 @@
         </el-form-item>
 
         <el-form-item align="center">
-          <el-button type="primary" round @click="submitForm">提交</el-button>
-          <el-button type="warning" round @click="resetForm">重置</el-button>
+          <el-button type="primary" round  @click="submitForm">提交</el-button>
+          <el-button type="warning" round @click="resetForm" >重置</el-button>
         </el-form-item>
       </el-form>
        </el-card>
@@ -47,11 +47,12 @@
           password: this.password
         }
         const res = await http.post('/login', data)
-        if (res.data === "success")
+        if (res.data.status === "success")
         {
-          // alert('请求成功'+res.data)
+          console.log("login status:"+res.data.status)
+          console.log("login user account:"+res.data.user.account)
           this.$message.success("登陆成功")
-          this.$cookie.set('userCookie', data.account, 1);
+          this.$cookie.set('userCookie', JSON.stringify(res.data.user), 1);
           this.$router.push("/")
         }
         else

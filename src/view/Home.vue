@@ -5,7 +5,7 @@
 <script>
     import NavBar from '@/components/NavBar'
     export default {
-        name: "Lab",
+        name: "Home",
       components:{NavBar}
     }
 </script>
