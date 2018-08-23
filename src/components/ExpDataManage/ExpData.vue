@@ -26,7 +26,7 @@
             <el-button type="success" icon="el-icon-upload2" circle></el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="warning" icon="el-icon-download" circle></el-button>
+            <el-button type="warning" icon="el-icon-download" circle @click="downloadDialogVisible=true"></el-button>
           </el-form-item>
         </el-form>
         <el-table
@@ -154,13 +154,26 @@
         <el-button type="primary" @click="submitExpDataForm">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="请选择要下载的实验数据内容" :visible.sync="downloadDialogVisible" center width="30%">
+      <el-form>
+        <el-form-item label="" label-width="75px">
+          <el-radio v-model="userType" label="all" border>全部数据</el-radio>
+          <el-radio v-model="userType" :label="currentUid" border>当前用户</el-radio>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="downloadDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="startDownload">开始下载</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import NavBar from '@/components/NavBar.vue'
   import http from '@/api/http'
-
+  import axios from 'axios';
+  import qs from 'qs'
   export default {
     name: "ExpData",
     components: {NavBar},
@@ -186,6 +199,11 @@
         DialogFormVisible: false,
         formLabelWidth: '250px',
 
+        // 下载
+        downloadDialogVisible: false,
+        userType: 'all',
+        currentUid:'',
+
         form: {
           did: "",
           eid: '',
@@ -204,6 +222,24 @@
       }
     },
     methods: {
+      startDownload()
+      {
+        var params = {
+          userType: this.userType,
+        }
+        axios({
+          method: 'post',
+          url: '/downExpData',
+          data: qs.stringify(params),
+          responseType: 'arraybuffer'
+        }).then(res =>
+        {
+          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+          let objectUrl = URL.createObjectURL(blob);
+          window.location.href = objectUrl;
+        })
+        this.downloadDialogVisible = false
+      },
       cancelDiaglog()
       {
         this.DialogFormVisible = false
@@ -257,7 +293,7 @@
           this.postExpDataEditForm()
         }
       },
-       async postqueryContent(page, per_page)
+      async postqueryContent(page, per_page)
       {
         let params = {
           selectType: this.selectType,
@@ -372,15 +408,15 @@
       {
         this.per_page = val
         if (this.queryEnabled == false)
-        this.getExpDatas(this.cur_page, val)
+          this.getExpDatas(this.cur_page, val)
         else
-        this.postqueryContent(this.cur_page, val)
+          this.postqueryContent(this.cur_page, val)
       },
       handleCurrentChange(val)
       {
         this.cur_page = val
         if (this.queryEnabled == false)
-        this.getExpDatas(val, this.per_page)
+          this.getExpDatas(val, this.per_page)
         else
           this.postqueryContent(val, this.per_page)
       },
@@ -402,6 +438,9 @@
     mounted: function ()
     {
       this.getExpDatas(this.cur_page, this.per_page)
+
+      let user = JSON.parse(this.$cookie.get('userCookie'))
+      this.currentUid=user.uid
     }
   }
 </script>
