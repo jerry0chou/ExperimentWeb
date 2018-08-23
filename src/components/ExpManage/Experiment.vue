@@ -36,6 +36,7 @@
           <el-form-item>
             <el-button type="warning" icon="el-icon-download" circle @click="downloadDialogVisible=true"></el-button>
           </el-form-item>
+
         </el-form>
 
         <el-table
@@ -171,10 +172,10 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="请选择要下载的实验状态" :visible.sync="downloadDialogVisible" center width="30%" >
+    <el-dialog title="请选择要下载的实验状态" :visible.sync="downloadDialogVisible" center width="30%">
       <el-form>
         <el-form-item label="" label-width="75px">
-          <el-select v-model="downloadExpStatus" >
+          <el-select v-model="downloadExpStatus">
             <el-option label="全部" value="-1"></el-option>
             <el-option label="未进行" value="0"></el-option>
             <el-option label="正在进行" value="1"></el-option>
@@ -195,6 +196,8 @@
 <script>
   import NavBar from '@/components/NavBar.vue'
   import http from '@/api/http'
+  import axios from 'axios';
+  import qs from 'qs'
 
   export default {
     name: "Experiment",
@@ -226,7 +229,7 @@
 
         // 下载
         downloadDialogVisible: false,
-        downloadExpStatus:'-1',
+        downloadExpStatus: '-1',
 
 
         form: {
@@ -240,14 +243,23 @@
       }
     },
     methods: {
-      async startDownload()
+      startDownload()
       {
-        let params = {
+        var params = {
           downloadExpStatus: this.downloadExpStatus,
         }
-        const res = await
-          http.post('/downExperiment', params)
-       alert(res.data)
+        axios({
+          method: 'post',
+          url: '/downExperiment',
+          data: qs.stringify(params),
+          responseType: 'arraybuffer'
+        }).then(res =>
+        {
+          let blob = new Blob([res.data], {type: "application/vnd.ms-excel"});
+          let objectUrl = URL.createObjectURL(blob);
+          window.location.href = objectUrl;
+        })
+        this.downloadDialogVisible=false
       },
       changeDate(timestamp)
       {
@@ -291,7 +303,6 @@
       },
       async postExperimentAddForm()
       {
-        //alert("postExperimentAddForm")
         if (this.form.expname === '')
           this.$message.error("实验名称不能为空")
         else if (this.form.labname === '')
