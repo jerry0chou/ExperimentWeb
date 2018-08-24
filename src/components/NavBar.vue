@@ -94,6 +94,20 @@
           this.offset = 5
         }
       },
+      // async loginOut()
+      // {
+      //   let params = {}
+      //   const res = await http.get('/logout', params)
+      //   if (res.data === "success")
+      //   {
+      //     this.$cookie.delete('userCookie')
+      //     this.$router.push("/login")
+      //     this.$message.success("注销成功")
+      //   }
+      //   else {
+      //     this.$message.error("注销失败")
+      //   }
+      // },
       loginOut()
       {
         this.$cookie.delete('userCookie')

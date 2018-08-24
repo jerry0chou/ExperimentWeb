@@ -21,13 +21,15 @@
           <el-form-item>
             <el-button type="danger" @click="batchDelete">批量删除</el-button>
           </el-form-item>
-
-          <el-form-item>
-            <el-button type="success" icon="el-icon-upload2" circle></el-button>
-          </el-form-item>
           <el-form-item>
             <el-button type="warning" icon="el-icon-download" circle @click="downloadDialogVisible=true"></el-button>
           </el-form-item>
+          <el-form-item>
+            <el-upload action="/uploadExpData" :data="getUid"  :show-file-list="false" :on-success="uploadSuccess">
+              <el-button type="success" icon="el-icon-upload2" circle></el-button>
+            </el-upload>
+          </el-form-item>
+
         </el-form>
         <el-table
           :data="expdatas"
@@ -174,6 +176,7 @@
   import http from '@/api/http'
   import axios from 'axios';
   import qs from 'qs'
+
   export default {
     name: "ExpData",
     components: {NavBar},
@@ -202,7 +205,7 @@
         // 下载
         downloadDialogVisible: false,
         userType: 'all',
-        currentUid:'',
+        currentUid: '',
 
         form: {
           did: "",
@@ -221,7 +224,27 @@
         availableExp: []
       }
     },
+    computed:{
+      getUid()
+      {
+        let user = JSON.parse(this.$cookie.get('userCookie'))
+        let uidObject={
+          uid:user.uid
+        }
+        return uidObject
+      }
+    },
     methods: {
+      uploadSuccess(response, file, fileList)
+      {   alert(response)
+          if(response==='success')
+          {
+            this.$message.success("上传成功")
+            this.getExpDatas(1, this.per_page)
+          }
+
+          else this.$message.error("上传失败")
+      },
       startDownload()
       {
         var params = {
@@ -440,7 +463,7 @@
       this.getExpDatas(this.cur_page, this.per_page)
 
       let user = JSON.parse(this.$cookie.get('userCookie'))
-      this.currentUid=user.uid
+      this.currentUid = user.uid
     }
   }
 </script>
