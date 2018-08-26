@@ -37,11 +37,16 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="5">
-          <template slot="title">报表管理</template>
-          <el-menu-item index="5-1">试验次数分析</el-menu-item>
-          <el-menu-item index="5-2">实验数据分析</el-menu-item>
-        </el-submenu>
+
+        <el-menu-item index="5">
+          <router-link to="/charts">图表分析</router-link>
+        </el-menu-item>
+
+        <!--<el-submenu index="5">-->
+          <!--<template slot="title">报表管理</template>-->
+          <!--<el-menu-item index="5-1">试验次数分析</el-menu-item>-->
+          <!--<el-menu-item index="5-2">实验数据分析</el-menu-item>-->
+        <!--</el-submenu>-->
 
         <el-menu-item index="6">
           <el-tag type="success">{{roleName}}</el-tag>
@@ -82,9 +87,9 @@
     methods: {
       getUser()
       {
-        console.log("userCookie: " + this.$cookie.get('userCookie'))
+        //console.log("userCookie: " + this.$cookie.get('userCookie'))
         let user = JSON.parse(this.$cookie.get('userCookie'))
-        console.log(user.account + " " + user.rid + " " + user.username)
+        //console.log(user.account + " " + user.rid + " " + user.username)
         this.username = user.username
         this.roleName = user.roleName
         if (user.rid === 1)
@@ -94,20 +99,6 @@
           this.offset = 5
         }
       },
-      // async loginOut()
-      // {
-      //   let params = {}
-      //   const res = await http.get('/logout', params)
-      //   if (res.data === "success")
-      //   {
-      //     this.$cookie.delete('userCookie')
-      //     this.$router.push("/login")
-      //     this.$message.success("注销成功")
-      //   }
-      //   else {
-      //     this.$message.error("注销失败")
-      //   }
-      // },
       loginOut()
       {
         this.$cookie.delete('userCookie')

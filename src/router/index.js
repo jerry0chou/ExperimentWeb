@@ -10,7 +10,7 @@ import Laboratory from '@/components/LabResourceManage/Laboratory.vue'
 import Material from '@/components/LabResourceManage/Material.vue'
 import Experiment from "@/components/ExpManage/Experiment.vue"
 import ExpData from "@/components/ExpDataManage/ExpData.vue"
-
+import Charts from '@/components/TableManage/Charts.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -64,6 +64,11 @@ export default new Router({
       path: '/expdata',
       name: 'ExpData',
       component: ExpData
+    },
+    {
+      path: '/charts',
+      name: 'Charts',
+      component: Charts
     }
   ]
 })

@@ -10,6 +10,16 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import 'v-charts/lib/style.css'
+import VCharts from 'v-charts'
+Vue.use(VCharts)
+
+// import ECharts from 'vue-echarts/components/ECharts'
+// import 'echarts/lib/chart/bar'
+// import 'echarts/lib/chart/line'
+// import 'echarts/lib/component/tooltip'
+//
+// Vue.component('chart', ECharts)
 
 Vue.use(BootstrapVue);
 

@@ -25,8 +25,8 @@
             <el-button type="warning" icon="el-icon-download" circle @click="downloadDialogVisible=true"></el-button>
           </el-form-item>
           <el-form-item>
-            <el-upload action="/uploadExpData" :data="getUid"  :show-file-list="false" :on-success="uploadSuccess">
-              <el-button type="success" icon="el-icon-upload2" circle></el-button>
+            <el-upload action="/uploadExpData" :data="getUid" :show-file-list="false" :on-success="uploadSuccess" :before-upload="tipsForUpload">
+              <el-button type="success" icon="el-icon-upload2" circle ></el-button>
             </el-upload>
           </el-form-item>
 
@@ -102,7 +102,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="cur_page"
-            :page-sizes="[5, 10, 15, 20,50]"
+            :page-sizes="[5, 10, 15, 20,50,100]"
             :page-size="5"
             layout="total,sizes, prev, pager, next"
             :total="count">
@@ -224,26 +224,35 @@
         availableExp: []
       }
     },
-    computed:{
+    computed: {
       getUid()
       {
         let user = JSON.parse(this.$cookie.get('userCookie'))
-        let uidObject={
-          uid:user.uid
+        let uidObject = {
+          uid: user.uid
         }
         return uidObject
       }
     },
     methods: {
+      tipsForUpload(file)
+      {
+        this.$notify.success({
+          title: 'Info',
+          message: '正在处理上传数据,请稍等',
+          duration: 3000
+        });
+        return true
+      },
       uploadSuccess(response, file, fileList)
-      {   alert(response)
-          if(response==='success')
-          {
-            this.$message.success("上传成功")
-            this.getExpDatas(1, this.per_page)
-          }
+      {
+        if (response === 'success')
+        {
+          this.$message.success("上传成功")
+          this.getExpDatas(1, this.per_page)
+        }
 
-          else this.$message.error("上传失败")
+        else this.$message.error("上传失败")
       },
       startDownload()
       {

@@ -113,7 +113,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="cur_page"
-            :page-sizes="[5, 10, 15, 20,50]"
+            :page-sizes="[5, 10, 15, 20,50,100]"
             :page-size="5"
             layout="total,sizes, prev, pager, next"
             :total="count">
@@ -489,7 +489,7 @@
         if (res.data != "error")
         {
           this.experiments = res.data.experiments
-          console.log(this.experiments)
+          //console.log(this.experiments)
           this.count = res.data.count
           this.labs = res.data.labs
           this.users = res.data.users
