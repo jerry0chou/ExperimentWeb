@@ -57,7 +57,9 @@
               {{username}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>主页</el-dropdown-item>
+              <el-dropdown-item>
+                <router-link to="/">主页</router-link>
+              </el-dropdown-item>
               <el-dropdown-item @click.native="loginOut">注销</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
